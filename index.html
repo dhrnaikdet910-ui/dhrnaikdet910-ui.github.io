@@ -19,7 +19,7 @@
         font-size:26px;
         border-bottom:2px solid #00ffcc;
         position: relative;
-        z-index: 10;
+        z-index: 1000;
     }
     .timer{
         font-size:20px;
@@ -38,7 +38,6 @@
         margin-bottom:20px;
         background:#07131f;
     }
-    /* Math Formula Box Style */
     .formula-box {
         background: #001a00;
         border-left: 4px solid #00ffcc;
@@ -49,9 +48,7 @@
         color: #ccffcc;
         line-height: 1.6;
     }
-    .formula-box i {
-        font-style: italic;
-    }
+    .formula-box i { font-style: italic; }
     
     button{
         background:#001f33;
@@ -77,8 +74,35 @@
         text-align:center;
     }
     
+    /* LEVER PUZZLE STYLES */
+    .lever-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 40px 0;
+    }
+    .lever {
+        width: 80px;
+        height: 80px;
+        font-size: 20px;
+        border-radius: 8px;
+        transition: 0.2s;
+    }
+    .lever.up {
+        background: lime;
+        color: black;
+        border-color: lime;
+        box-shadow: 0px -5px 0px 0px #009900 inset;
+    }
+    .lever.down {
+        background: red;
+        color: white;
+        border-color: red;
+        box-shadow: 0px 5px 0px 0px #990000 inset;
+    }
+
     /* POPUP STYLES */
-    #popup, #gameControlsPopup{
+    #popup, #gameControlsPopup, #msPopup{
         position:fixed;
         top:0;
         left:0;
@@ -91,8 +115,9 @@
         align-items:center;
         font-size:30px;
         text-align:center;
-        z-index: 100;
+        z-index: 900;
         border: 2px solid #00ffcc;
+        box-sizing: border-box;
     }
     .flash{
         animation:flash 0.6s infinite;
@@ -109,7 +134,7 @@
         background:#330000;
         color:red;
         font-weight:bold;
-        z-index: 200;
+        z-index: 1100;
     }
 
     /* GAME CANVAS */
@@ -123,22 +148,21 @@
         background: rgba(0, 10, 0, 1);
         z-index: 50;
     }
-    canvas {
-        display: block;
-    }
+    canvas { display: block; }
     #gameUI {
         position: absolute;
-        top: 20px;
+        top: 90px;
         left: 20px;
         color: lime;
         font-size: 18px;
         pointer-events: none;
+        z-index: 100;
     }
     .control-box {
         border: 2px solid #00ffcc;
         padding: 40px;
         background: #001100;
-        max-width: 500px;
+        max-width: 600px;
     }
     .key {
         border: 1px solid white;
@@ -148,6 +172,48 @@
         margin: 2px;
         color: white;
     }
+
+    /* MINESWEEPER STYLES */
+    #msGameContainer {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 5, 10, 0.95);
+        z-index: 800;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 100px;
+        padding-bottom: 50px;
+        box-sizing: border-box;
+        overflow-y: auto;
+    }
+    #msGrid {
+        display: grid;
+        grid-template-columns: repeat(8, 45px);
+        gap: 3px;
+        background: #00ffcc;
+        padding: 3px;
+        border: 2px solid #00ffcc;
+    }
+    .ms-cell {
+        width: 45px;
+        height: 45px;
+        background: #001f33;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        user-select: none;
+    }
+    .ms-cell:hover { background: #00334d; }
+    .ms-cell.revealed { background: black; cursor: default; }
+    .ms-cell.mine { background: red; }
 </style>
 </head>
 <body>
@@ -189,8 +255,8 @@
 
     <div class="cluster">
         <h3>Cluster 3 – Maximum Distance Calculation</h3>
-        <p><b>Problem:</b> Launched at 45° angle. g = 10 m/s². No air resistance.</p>
-        <p>At t = 120s (2 mins), vertical velocity is 5,745 m/s.</p>
+        <p><b>Problem:</b> Your ICBM specialist advisor says the ICBM was most likely launched at 45° angle above the horizontal. g = 10 m/s². No air resistance.</p>
+        <p>At t = 120s (2 mins), after launch, our satellites have observed the rocket to have a vertical velocity of 5,745 m/s at that instant.</p>
         <p>Find the maximum horizontal distance in miles (round to nearest 100 miles).</p>
         
         <div class="formula-box">
@@ -277,11 +343,29 @@
     <button onclick="launchPhase2()">FINAL LAUNCH</button>
 </div>
 
+<div id="leverStage" class="section" style="text-align: center;">
+    <h2 style="color:red; font-size:36px;">MANUAL OVERRIDE REQUIRED</h2>
+    <div class="cluster" style="display:inline-block; max-width:800px; text-align:left;">
+        <p style="font-size:22px; color:yellow;"><b>CRITICAL ERROR:</b> We forgot the combination of levers to launch the rocket! Figure it out so we can stop the ICBM!</p>
+        <p>Adjust the 4 manual relay levers into the correct configuration, then attempt to initiate launch.</p>
+        
+        <div class="lever-container">
+            <button id="lev0" class="lever up" onclick="toggleLever(0)">UP</button>
+            <button id="lev1" class="lever up" onclick="toggleLever(1)">UP</button>
+            <button id="lev2" class="lever up" onclick="toggleLever(2)">UP</button>
+            <button id="lev3" class="lever up" onclick="toggleLever(3)">UP</button>
+        </div>
+
+        <div style="text-align: center;">
+            <button style="padding: 15px 30px; font-size: 20px;" onclick="checkLevers()">TEST COMBINATION & LAUNCH</button>
+        </div>
+    </div>
+</div>
+
 <div id="gameContainer">
     <canvas id="gameCanvas"></canvas>
     <div id="gameUI">RADAR TRACKING ACTIVE</div>
 </div>
-
 <div id="gameControlsPopup">
     <div class="control-box">
         <h2>INTERCEPTOR CONTROLS</h2>
@@ -296,6 +380,46 @@
     </div>
 </div>
 
+<div id="msPopup">
+    <div class="control-box" style="border-color: red;">
+        <h2 style="color:red;">WARNING: CYBER ATTACK DETECTED</h2>
+        <p>The servers are infected with instances of a virus.</p>
+        <p style="font-size:18px; line-height:1.4;">
+            <b>RULES:</b> Find all instances to restart the server and continue. 
+            <br><br>
+            - Left-click a sector to scan it.<br>
+            - The number reveals how many viruses are in adjacent sectors.<br>
+            - Right-click to flag a suspected virus location.<br>
+            - Isolate all safe sectors to successfully reboot the system.
+        </p>
+        <button style="border-color:red; color:red;" onclick="startMinesweeper()">CONTINUE TO SCAN</button>
+    </div>
+</div>
+
+<div id="msGameContainer">
+    <h2 style="color:red; margin-bottom: 20px;">SYSTEM OVERRIDE REQUIRED</h2>
+    
+    <div id="msGrid" oncontextmenu="return false;"></div>
+    <p style="margin-top:10px; color:gray;">Left-Click: Scan Sector | Right-Click: Flag Virus</p>
+
+    <div style="margin-top: 30px; border-top: 2px dashed #00ffcc; padding-top: 20px; text-align: center; max-width: 600px;">
+        <p>To proceed, enter the cyber officer's decrypted code, the encrypted code is <b>ORTSGRMTNXJFVVM</b></p>
+        
+        <div class="formula-box" style="font-family: monospace; font-size: 14px; text-align: left;">
+            <b>SUBSTITUTION KEY:</b><br>
+            A=Z, B=Y, C=X, D=W, E=V, F=U, G=T, H=S, I=R, J=Q, K=P, L=O, M=N<br>
+            N=M, O=L, P=K, Q=J, R=I, S=H, T=G, U=F, V=E, W=D, X=C, Y=B, Z=A
+        </div>
+
+        <input id="cyberCodeInput" placeholder="Decrypted Code" style="text-align: center; width: 250px;">
+        <button onclick="verifyCyberCode()">VERIFY</button>
+        <p id="cyberCodeStatus" style="font-weight:bold; margin-top: 10px;"></p>
+    </div>
+
+    <button id="msContinueBtn" style="margin-top: 20px; padding: 15px 30px; font-size: 16px; background: #333; color: #777; border-color: #777; cursor: not-allowed;" disabled onclick="finishCyberAttack()">AWAITING SYSTEM CLEARANCE...</button>
+
+</div>
+
 <div id="popup"></div>
 <button id="skipBtn" onclick="skipTime()">⚠ DO NOT PRESS</button>
 
@@ -304,29 +428,21 @@
 let time=55*60;
 let timer=null;
 
-// UPDATED ANSWERS based on PDF
 let answers = {
-    1: "THE ICBM IS NOT A TEST. IT IS A REAL THREAT.", // Cluster 1
-    2: "PYONGYANG",                                   // Cluster 2
-    3: "6000",                                        // Cluster 3
-    4: "SEA",                                         // Cluster 4 (Airport code)
-    5: "542",                                         // Cluster 5
-    6: "EVACUATE",                                    // Cluster 6
-    7: "12.5"                                         // Cluster 7
+    1: "THE ICBM IS NOT A TEST. IT IS A REAL THREAT.", 
+    2: "PYONGYANG",                                   
+    3: "6000",                                        
+    4: "SEA",                                         
+    5: "542",                                         
+    6: "EVACUATE",                                    
+    7: "12.5"                                         
 };
 
-// STATIC CODES (Fixed 4-character alphanumeric)
 let staticCodes = {
-    1: "8XJ2",
-    2: "3B9Q",
-    3: "K4M1",
-    4: "7D5V",
-    5: "P2L9",
-    6: "4X8Z",
-    7: "W1N6"
+    1: "8XJ2", 2: "3B9Q", 3: "K4M1", 4: "7D5V", 5: "P2L9", 6: "4X8Z", 7: "W1N6"
 };
 
-let codesRevealed = {}; // Tracks which have been unlocked
+let codesRevealed = {}; 
 let currentPhase = 1;
 
 function beginMission(){
@@ -335,37 +451,45 @@ function beginMission(){
     timer=setInterval(updateTimer,1000);
 }
 
+// Ensure Cyber Attack doesn't overlap the minigame or full screen transitions
+function checkCyberTrigger() {
+    if(!document.getElementById("popup")) return;
+
+    if (time <= 44 * 60 && !msTriggered && !gameActive) {
+        let p1 = document.getElementById("popup").style.display;
+        let p2 = document.getElementById("gameControlsPopup").style.display;
+        let start = document.getElementById("start").style.display;
+        
+        if (p1 !== "flex" && p2 !== "flex" && start === "none") {
+            msTriggered = true;
+            document.getElementById("msPopup").style.display = "flex";
+        }
+    }
+}
+
 function updateTimer(){
     let m=Math.floor(time/60);
     let s=time%60;
     document.getElementById("time").innerText=
     m.toString().padStart(2,'0')+":"+s.toString().padStart(2,'0');
+    
+    checkCyberTrigger();
+
     if(time<=0){
-        document.body.innerHTML="<h1 style='color:red;text-align:center;padding-top:200px;'>MISSION FAILURE<br>ITS TOO LATE TO STOP THE ATTACK, USA IS COMPROMISED</h1>";
+        document.body.innerHTML="<h1 style='color:red;text-align:center;padding-top:200px; position:relative; z-index:9999;'>MISSION FAILURE<br>ITS TOO LATE TO STOP THE ATTACK, USA IS COMPROMISED</h1>";
         clearInterval(timer);
     }
     time--;
 }
 
 function checkAnswer(n){
-    // Normalize input: uppercase, trim whitespace, remove trailing periods if any
     let val = document.getElementById("a"+n).value.trim().toUpperCase();
-    
-    // Remove period at end if user typed a full sentence for Cluster 1
-    if(n === 1 && val.endsWith('.')) {
-        val = val.slice(0, -1);
-    }
-    
+    if(n === 1 && val.endsWith('.')) { val = val.slice(0, -1); }
     let isCorrect = false;
 
-    // --- MASTER CODE CHECK (DAWG) ---
-    if(val === "DAWG") {
-        isCorrect = true;
-    } 
-    // --- Standard Logic ---
+    if(val === "DAWG") { isCorrect = true; } 
     else if(n === 1) {
-        // Special handling for long sentence to allow with/without punctuation
-        let cleanInput = val.replace(/[^A-Z]/g, ""); // remove spaces/punct
+        let cleanInput = val.replace(/[^A-Z]/g, ""); 
         let cleanAnswer = answers[1].replace(/[^A-Z]/g, "");
         if(cleanInput === cleanAnswer) isCorrect = true;
     } else {
@@ -374,7 +498,7 @@ function checkAnswer(n){
 
     if(isCorrect){
         if(!codesRevealed[n]){
-            codesRevealed[n] = staticCodes[n]; // Use the STATIC code
+            codesRevealed[n] = staticCodes[n]; 
             document.getElementById("code"+n).innerText = "Authorization Code: " + staticCodes[n];
             document.getElementById("code"+n).style.color = "#00ffcc";
         }
@@ -383,16 +507,12 @@ function checkAnswer(n){
     }
 }
 
-/* --- LAUNCH LOGIC --- */
-
 function launchPhase1(){
-    // Retrieve values
     let v1 = document.getElementById("l1").value.trim().toUpperCase();
     let v2 = document.getElementById("l2").value.trim().toUpperCase();
     let v3 = document.getElementById("l3").value.trim().toUpperCase();
     let v4 = document.getElementById("l4").value.trim().toUpperCase();
 
-    // Check against STATIC codes OR the Master Code "DAWG"
     if(
         (v1 === staticCodes[1] || v1 === "DAWG") &&
         (v2 === staticCodes[2] || v2 === "DAWG") &&
@@ -402,31 +522,60 @@ function launchPhase1(){
         currentPhase = 1;
         initGameSequence();
     }else{
-        alert("INVALID AUTHORIZATION SEQUENCE\n(Ensure you entered the codes or the testing master code)");
+        alert("INVALID AUTHORIZATION SEQUENCE");
     }
 }
 
 function launchPhase2(){
-    // Retrieve values
     let v5 = document.getElementById("l5").value.trim().toUpperCase();
     let v6 = document.getElementById("l6").value.trim().toUpperCase();
     let v7 = document.getElementById("l7").value.trim().toUpperCase();
 
-    // Check against STATIC codes OR the Master Code "DAWG"
     if(
         (v5 === staticCodes[5] || v5 === "DAWG") &&
         (v6 === staticCodes[6] || v6 === "DAWG") &&
         (v7 === staticCodes[7] || v7 === "DAWG")
     ){
         currentPhase = 2;
-        initGameSequence();
+        
+        if(time > 600) {
+            document.getElementById("set2").style.display = "none";
+            document.getElementById("leverStage").style.display = "block";
+        } else {
+            initGameSequence();
+        }
+
     }else{
         alert("INVALID AUTHORIZATION SEQUENCE");
     }
 }
 
+/* --- LEVER PUZZLE LOGIC --- */
+let levers = [1, 1, 1, 1];
+
+function toggleLever(index) {
+    levers[index] = levers[index] === 1 ? 0 : 1;
+    let btn = document.getElementById("lev" + index);
+    
+    if(levers[index] === 1) {
+        btn.className = "lever up";
+        btn.innerText = "UP";
+    } else {
+        btn.className = "lever down";
+        btn.innerText = "DOWN";
+    }
+}
+
+function checkLevers() {
+    if (levers[0] === 1 && levers[1] === 0 && levers[2] === 0 && levers[3] === 1) {
+        document.getElementById("leverStage").style.display = "none";
+        initGameSequence();
+    } else {
+        alert("INCORRECT CONFIGURATION. ROCKET UNRESPONSIVE.");
+    }
+}
+
 function initGameSequence(){
-    // 1. Flash Launch
     let popup=document.getElementById("popup");
     popup.style.display="flex";
     popup.className="flash";
@@ -435,22 +584,219 @@ function initGameSequence(){
     setTimeout(()=>{
         popup.style.display="none";
         popup.className="";
-        // 2. Show Controls
         document.getElementById("gameControlsPopup").style.display = "flex";
     }, 2000);
 }
 
-/* --- GAME ENGINE --- */
+function skipTime(){
+    time-=300;
+    if(time<0) time=0;
+    checkCyberTrigger();
+}
+
+/* --- MINESWEEPER & CIPHER LOGIC --- */
+let msTriggered = false;
+let msWon = false;
+let codeAccepted = false;
+let msData = [];
+const msRows = 8;
+const msCols = 8;
+const msStaticMines = [
+    [0, 1], [1, 5], [2, 2], [3, 7], [4, 0],
+    [5, 4], [6, 1], [6, 6], [7, 3], [7, 7]
+];
+
+function startMinesweeper() {
+    document.getElementById("msPopup").style.display = "none";
+    document.getElementById("msGameContainer").style.display = "flex";
+    initMinesweeper();
+}
+
+function initMinesweeper() {
+    msWon = false;
+    evaluateCyberClear(); 
+    msData = [];
+    const gridEl = document.getElementById("msGrid");
+    gridEl.innerHTML = "";
+
+    for(let r=0; r<msRows; r++) {
+        let row = [];
+        for(let c=0; c<msCols; c++) {
+            row.push({ r: r, c: c, mine: false, revealed: false, flagged: false, adjacent: 0 });
+        }
+        msData.push(row);
+    }
+
+    msStaticMines.forEach(pos => {
+        msData[pos[0]][pos[1]].mine = true;
+    });
+
+    for(let r=0; r<msRows; r++) {
+        for(let c=0; c<msCols; c++) {
+            if(msData[r][c].mine) continue;
+            let count = 0;
+            for(let i=-1; i<=1; i++){
+                for(let j=-1; j<=1; j++){
+                    let nr = r+i, nc = c+j;
+                    if(nr>=0 && nr<msRows && nc>=0 && nc<msCols && msData[nr][nc].mine){
+                        count++;
+                    }
+                }
+            }
+            msData[r][c].adjacent = count;
+        }
+    }
+    renderMsGrid();
+}
+
+function renderMsGrid() {
+    const gridEl = document.getElementById("msGrid");
+    gridEl.innerHTML = "";
+    
+    for(let r=0; r<msRows; r++) {
+        for(let c=0; c<msCols; c++) {
+            let cell = msData[r][c];
+            let div = document.createElement("div");
+            div.className = "ms-cell";
+            
+            div.addEventListener("mousedown", (e) => {
+                if(e.button === 0) msClick(r, c); 
+                if(e.button === 2) msFlag(r, c);  
+            });
+
+            if(cell.revealed) {
+                div.classList.add("revealed");
+                if(cell.mine) {
+                    div.classList.add("mine");
+                    div.innerText = "👾";
+                } else if(cell.adjacent > 0) {
+                    div.innerText = cell.adjacent;
+                    if(cell.adjacent === 1) div.style.color = "#00ffcc";
+                    else if(cell.adjacent === 2) div.style.color = "lime";
+                    else if(cell.adjacent === 3) div.style.color = "yellow";
+                    else div.style.color = "red";
+                }
+            } else if(cell.flagged) {
+                div.innerText = "🚩";
+            }
+            gridEl.appendChild(div);
+        }
+    }
+}
+
+function msClick(r, c) {
+    if(msWon) return; 
+    let cell = msData[r][c];
+    if(cell.flagged || cell.revealed) return;
+    
+    cell.revealed = true;
+    
+    if(cell.mine) {
+        renderMsGrid(); 
+        setTimeout(() => {
+            alert("VIRUS TRIGGERED. REBOOTING SYSTEM...");
+            initMinesweeper(); 
+        }, 300);
+        return;
+    }
+    
+    if(cell.adjacent === 0) {
+        for(let i=-1; i<=1; i++){
+            for(let j=-1; j<=1; j++){
+                let nr = r+i, nc = c+j;
+                if(nr>=0 && nr<msRows && nc>=0 && nc<msCols) {
+                    if(!msData[nr][nc].revealed) msClick(nr, nc);
+                }
+            }
+        }
+    }
+    renderMsGrid();
+    checkMsWin();
+}
+
+function msFlag(r, c) {
+    if(msWon) return;
+    let cell = msData[r][c];
+    if(cell.revealed) return;
+    cell.flagged = !cell.flagged;
+    renderMsGrid();
+}
+
+function checkMsWin() {
+    let revealedSafe = 0;
+    const totalSafe = (msRows * msCols) - msStaticMines.length;
+    
+    for(let r=0; r<msRows; r++) {
+        for(let c=0; c<msCols; c++) {
+            if(msData[r][c].revealed && !msData[r][c].mine) {
+                revealedSafe++;
+            }
+        }
+    }
+    
+    if(revealedSafe === totalSafe && !msWon) {
+        msWon = true;
+        setTimeout(() => {
+            alert("VIRUSES ISOLATED. SERVER CORE STABILIZED.");
+            evaluateCyberClear();
+        }, 100);
+    }
+}
+
+function verifyCyberCode() {
+    let val = document.getElementById("cyberCodeInput").value.trim().toUpperCase();
+    if(val === "LIGHTNINGMCQUEEN" || val === "DAWG") {
+        codeAccepted = true;
+        document.getElementById("cyberCodeStatus").innerText = "CODE ACCEPTED";
+        document.getElementById("cyberCodeStatus").style.color = "lime";
+        document.getElementById("cyberCodeInput").disabled = true;
+        evaluateCyberClear();
+    } else {
+        alert("INCORRECT DECRYPTION");
+    }
+}
+
+function evaluateCyberClear() {
+    let btn = document.getElementById("msContinueBtn");
+    if(msWon && codeAccepted) {
+        btn.disabled = false;
+        btn.style.background = "#001f33";
+        btn.style.color = "#00ffcc";
+        btn.style.borderColor = "#00ffcc";
+        btn.style.cursor = "pointer";
+        btn.innerText = "ALL CLEAR: RESTART SERVER AND CONTINUE";
+    } else {
+        btn.disabled = true;
+        btn.style.background = "#333";
+        btn.style.color = "#777";
+        btn.style.borderColor = "#777";
+        btn.style.cursor = "not-allowed";
+        
+        if(msWon) {
+            btn.innerText = "AWAITING CYBER CODE...";
+        } else if(codeAccepted) {
+            btn.innerText = "AWAITING VIRUS ISOLATION...";
+        } else {
+            btn.innerText = "AWAITING SYSTEM CLEARANCE...";
+        }
+    }
+}
+
+function finishCyberAttack() {
+    document.getElementById("msGameContainer").style.display = "none";
+    alert("SERVERS RESTARTED SUCCESSFULLY. RESUMING MISSION.");
+}
+
+/* --- INTERCEPTOR GAME ENGINE --- */
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 let gameLoopId;
-let icbm = { x: 0, y: 0, vx: 0, vy: 0 };
+let icbm = { x: 0, y: 0, vx: 0, vy: 0, g: 0.003 };
 let player = { x: 0, y: 0, speed: 5, w: 20, h: 20 };
 let explosions = [];
 let keys = {};
 let gameActive = false;
 
-// Input Handling
 window.addEventListener('keydown', (e) => { keys[e.key] = true; });
 window.addEventListener('keyup', (e) => { keys[e.key] = false; });
 
@@ -464,18 +810,15 @@ function startGameEngine(){
     document.getElementById("gameContainer").style.display = "block";
     resizeCanvas();
     
-    // Reset Player (Center Bottom)
     player.x = canvas.width / 2;
     player.y = canvas.height - 100;
     
-    // Reset ICBM (Parabola from mid-left)
+    // Setup ICBM Path to land exactly at bottom right (canvas.width, canvas.height)
     icbm.x = 0;
     icbm.y = canvas.height / 2; 
-    
-    // SLOWER SPEED
-    let speed = canvas.width / 1200; 
-    icbm.vx = speed; 
-    icbm.vy = -speed * 0.9; // Initial upward arc
+    let framesToLand = 1000; // Total frames of flight time
+    icbm.vx = canvas.width / framesToLand;
+    icbm.vy = (canvas.height - (canvas.height / 2) - (0.5 * icbm.g * framesToLand * framesToLand)) / framesToLand;
     
     explosions = [];
     gameActive = true;
@@ -485,11 +828,9 @@ function startGameEngine(){
 function loop(){
     if(!gameActive) return;
 
-    // Clear
     ctx.fillStyle = "rgba(0, 10, 0, 0.4)"; 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Draw Grid
     ctx.strokeStyle = "#003300";
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -497,19 +838,18 @@ function loop(){
     for(let i=0; i<canvas.height; i+=100){ ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); }
     ctx.stroke();
 
-    // 1. Update Player (WASD / Arrows)
     if(keys['w'] || keys['ArrowUp']) player.y -= player.speed;
     if(keys['s'] || keys['ArrowDown']) player.y += player.speed;
     if(keys['a'] || keys['ArrowLeft']) player.x -= player.speed;
     if(keys['d'] || keys['ArrowRight']) player.x += player.speed;
 
-    // Clamp Player
-    if(player.x < 0) player.x = 0;
-    if(player.x > canvas.width) player.x = canvas.width;
-    if(player.y < 0) player.y = 0;
-    if(player.y > canvas.height) player.y = canvas.height;
+    // Strict Padding Limits to keep Player on screen fully
+    let padding = 15;
+    if(player.x < padding) player.x = padding;
+    if(player.x > canvas.width - padding) player.x = canvas.width - padding;
+    if(player.y < padding) player.y = padding;
+    if(player.y > canvas.height - padding) player.y = canvas.height - padding;
 
-    // Draw Player
     ctx.fillStyle = "#00ffcc";
     ctx.beginPath();
     ctx.moveTo(player.x, player.y - 10);
@@ -517,12 +857,10 @@ function loop(){
     ctx.lineTo(player.x + 10, player.y + 10);
     ctx.fill();
 
-    // 2. Update ICBM
     icbm.x += icbm.vx;
     icbm.y += icbm.vy;
-    icbm.vy += 0.002; // Very low gravity for slow arc
+    icbm.vy += icbm.g; 
     
-    // Draw ICBM
     ctx.fillStyle = "red";
     ctx.beginPath();
     ctx.moveTo(icbm.x + 15, icbm.y);
@@ -533,16 +871,18 @@ function loop(){
     ctx.fillStyle = "white";
     ctx.fillText("HOSTILE", icbm.x - 20, icbm.y - 15);
 
-    // 3. Collision Detection
     let dist = Math.hypot(icbm.x - player.x, icbm.y - player.y);
     
     if(dist < 30){
-        handleGameEnd(true); // Hit
+        handleGameEnd(true); 
         return;
     }
 
-    if(icbm.x > canvas.width || icbm.y > canvas.height){
-        handleGameEnd(false); // Miss
+    // Boundary check for ICBM hitting screen edges
+    if(icbm.x >= canvas.width || icbm.y >= canvas.height){
+        icbm.x = Math.min(icbm.x, canvas.width - 15);
+        icbm.y = Math.min(icbm.y, canvas.height - 15);
+        handleGameEnd(false); 
         return;
     }
 
@@ -563,7 +903,6 @@ function handleGameEnd(isHit){
         document.getElementById("gameContainer").style.display = "none";
         
         if(currentPhase === 1){
-            // PHASE 1: ALWAYS MALFUNCTION
             let popup = document.getElementById("popup");
             popup.style.display = "flex";
             popup.className = "flash"; 
@@ -578,10 +917,10 @@ function handleGameEnd(isHit){
                 popup.className="";
                 document.getElementById("set1").style.display="none";
                 document.getElementById("set2").style.display="block";
+                checkCyberTrigger(); 
             }, 4000);
 
         } else if (currentPhase === 2){
-            // PHASE 2: REAL OUTCOME
             if(isHit){
                 document.body.innerHTML="<h1 style='color:lime;text-align:center;padding-top:200px;font-size:50px;'>MISSION SUCCESS<br>THREAT NEUTRALIZED</h1>";
                 clearInterval(timer);
@@ -593,10 +932,6 @@ function handleGameEnd(isHit){
     }, 500);
 }
 
-function skipTime(){
-    time-=600;
-    if(time<0) time=0;
-}
 </script>
 
 </body>
