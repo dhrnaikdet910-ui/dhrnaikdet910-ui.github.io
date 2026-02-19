@@ -19,7 +19,8 @@
         font-size:26px;
         border-bottom:2px solid #00ffcc;
         position: relative;
-        z-index: 1000;
+        /* Increased Z-index so it stays on top of penalty popups */
+        z-index: 2001; 
     }
     .timer{
         font-size:20px;
@@ -74,142 +75,162 @@
         text-align:center;
     }
     
-    /* LEVER PUZZLE STYLES */
+    /* OVERRIDE PUZZLES STYLES */
+    .override-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    /* Levers */
     .lever-container {
         display: flex;
         justify-content: center;
-        gap: 20px;
-        margin: 40px 0;
+        gap: 15px;
+        margin: 20px 0;
     }
     .lever {
-        width: 80px;
-        height: 80px;
-        font-size: 20px;
+        width: 60px;
+        height: 60px;
+        font-size: 16px;
         border-radius: 8px;
         transition: 0.2s;
     }
-    .lever.up {
-        background: lime;
-        color: black;
-        border-color: lime;
-        box-shadow: 0px -5px 0px 0px #009900 inset;
+    .lever.up { background: lime; color: black; border-color: lime; box-shadow: 0px -5px 0px 0px #009900 inset; }
+    .lever.down { background: red; color: white; border-color: red; box-shadow: 0px 5px 0px 0px #990000 inset; }
+
+    /* Wires */
+    .wire-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        background: #222;
+        padding: 20px;
+        border: 2px solid #555;
+        margin: 20px 0;
     }
-    .lever.down {
-        background: red;
-        color: white;
-        border-color: red;
-        box-shadow: 0px 5px 0px 0px #990000 inset;
+    .wire {
+        width: 150px;
+        height: 15px;
+        cursor: pointer;
+        border: 1px solid #000;
+        border-radius: 10px;
+        box-shadow: 0px 3px 5px rgba(0,0,0,0.5);
     }
+    .wire.cut { opacity: 0.1; pointer-events: none; }
+    .wire-white { background: #fff; }
+    .wire-yellow { background: #ffcc00; }
+    .wire-blue { background: #0066ff; }
+    .wire-red { background: #cc0000; }
+
+    /* Maze (Invisible Walls Update) */
+    .maze-container {
+        background: #000;
+        border: 2px solid transparent; 
+        padding: 5px;
+        display: inline-block;
+        margin: 10px;
+    }
+    .maze-row { display: flex; }
+    .maze-cell {
+        width: 35px;
+        height: 35px;
+        box-sizing: border-box;
+        border: 1px dotted transparent;
+        position: relative;
+    }
+    /* ADDED: Center dot for each cell to make the grid visible */
+    .maze-cell::before {
+        content: "";
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #444; 
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+    
+    /* Walls made transparent so they are invisible to player */
+    .wall-r { border-right: 2px solid transparent; }
+    .wall-b { border-bottom: 2px solid transparent; }
+    
+    /* DEBUG CLASSES */
+    .debug-maze .wall-r { border-right: 2px solid #00ffcc !important; }
+    .debug-maze .wall-b { border-bottom: 2px solid #00ffcc !important; }
+    
+    .maze-player {
+        width: 16px; height: 16px;
+        background: white; border-radius: 50%;
+        position: absolute; top: 8px; left: 8px;
+        z-index: 3;
+    }
+    .maze-goal {
+        width: 0; height: 0; 
+        border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 16px solid red;
+        position: absolute; top: 8px; left: 6px;
+        z-index: 2;
+    }
+    .maze-circles {
+        width: 20px; height: 20px;
+        border: 2px solid #555; border-radius: 50%;
+        position: absolute; top: 4px; left: 4px;
+        z-index: 2;
+    }
+    .maze-btn { width: 40px; height: 40px; font-size: 20px; padding: 0; margin: 2px; }
 
     /* POPUP STYLES */
-    #popup, #gameControlsPopup, #msPopup{
+    #popup, #gameControlsPopup, #msPopup, #penaltyPopup{
         position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
+        top:0; left:0; width:100%; height:100%;
         background:rgba(0,0,0,0.95);
         display:none;
-        flex-direction: column;
-        justify-content:center;
-        align-items:center;
-        font-size:30px;
-        text-align:center;
-        z-index: 900;
-        border: 2px solid #00ffcc;
-        box-sizing: border-box;
+        flex-direction: column; justify-content:center; align-items:center;
+        font-size:30px; text-align:center; box-sizing: border-box;
     }
-    .flash{
-        animation:flash 0.6s infinite;
-    }
+    #popup, #gameControlsPopup, #msPopup { z-index: 900; border: 2px solid #00ffcc; }
+    
+    /* Penalty popup z-index lower than header */
+    #penaltyPopup { z-index: 2000; background:rgba(200,0,0,0.95); border: 4px solid black;}
+    
+    .flash { animation:flash 0.6s infinite; }
     @keyframes flash{
-        0%{background:black;color:red;}
-        50%{background:red;color:black;}
-        100%{background:black;color:red;}
+        0%{background:black;color:red;} 50%{background:red;color:black;} 100%{background:black;color:red;}
     }
     #skipBtn{
-        position:fixed;
-        bottom:15px;
-        right:15px;
-        background:#330000;
-        color:red;
-        font-weight:bold;
-        z-index: 1100;
+        position:fixed; bottom:15px; right:15px; background:#330000; color:red; font-weight:bold; z-index: 1100;
     }
 
     /* GAME CANVAS */
     #gameContainer {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 10, 0, 1);
-        z-index: 50;
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 10, 0, 1); z-index: 50;
     }
     canvas { display: block; }
     #gameUI {
-        position: absolute;
-        top: 90px;
-        left: 20px;
-        color: lime;
-        font-size: 18px;
-        pointer-events: none;
-        z-index: 100;
+        position: absolute; top: 90px; left: 20px; color: lime; font-size: 18px; pointer-events: none; z-index: 100;
     }
-    .control-box {
-        border: 2px solid #00ffcc;
-        padding: 40px;
-        background: #001100;
-        max-width: 600px;
-    }
-    .key {
-        border: 1px solid white;
-        padding: 5px 10px;
-        border-radius: 4px;
-        display: inline-block;
-        margin: 2px;
-        color: white;
-    }
+    .control-box { border: 2px solid #00ffcc; padding: 40px; background: #001100; max-width: 600px; }
+    .key { border: 1px solid white; padding: 5px 10px; border-radius: 4px; display: inline-block; margin: 2px; color: white; }
 
     /* MINESWEEPER STYLES */
     #msGameContainer {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 5, 10, 0.95);
-        z-index: 800;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        padding-top: 100px;
-        padding-bottom: 50px;
-        box-sizing: border-box;
-        overflow-y: auto;
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 5, 10, 0.95); z-index: 800;
+        flex-direction: column; justify-content: flex-start; align-items: center;
+        padding-top: 100px; padding-bottom: 50px; box-sizing: border-box; overflow-y: auto;
     }
     #msGrid {
-        display: grid;
-        grid-template-columns: repeat(8, 45px);
-        gap: 3px;
-        background: #00ffcc;
-        padding: 3px;
-        border: 2px solid #00ffcc;
+        display: grid; grid-template-columns: repeat(8, 45px); gap: 3px; background: #00ffcc; padding: 3px; border: 2px solid #00ffcc;
     }
     .ms-cell {
-        width: 45px;
-        height: 45px;
-        background: #001f33;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 20px;
-        font-weight: bold;
-        cursor: pointer;
-        user-select: none;
+        width: 45px; height: 45px; background: #001f33; display: flex; justify-content: center; align-items: center;
+        font-size: 20px; font-weight: bold; cursor: pointer; user-select: none;
     }
     .ms-cell:hover { background: #00334d; }
     .ms-cell.revealed { background: black; cursor: default; }
@@ -255,8 +276,8 @@
 
     <div class="cluster">
         <h3>Cluster 3 – Maximum Distance Calculation</h3>
-        <p><b>Problem:</b> Your ICBM specialist advisor says the ICBM was most likely launched at 45° angle above the horizontal. g = 10 m/s². No air resistance.</p>
-        <p>At t = 120s (2 mins), after launch, our satellites have observed the rocket to have a vertical velocity of 5,745 m/s at that instant.</p>
+        <p><b>Problem:</b> Launched at 45° angle. g = 10 m/s². No air resistance.</p>
+        <p>At t = 120s (2 mins), vertical velocity is 5,745 m/s.</p>
         <p>Find the maximum horizontal distance in miles (round to nearest 100 miles).</p>
         
         <div class="formula-box">
@@ -343,23 +364,77 @@
     <button onclick="launchPhase2()">FINAL LAUNCH</button>
 </div>
 
-<div id="leverStage" class="section" style="text-align: center;">
-    <h2 style="color:red; font-size:36px;">MANUAL OVERRIDE REQUIRED</h2>
-    <div class="cluster" style="display:inline-block; max-width:800px; text-align:left;">
-        <p style="font-size:22px; color:yellow;"><b>CRITICAL ERROR:</b> We forgot the combination of levers to launch the rocket! Figure it out so we can stop the ICBM!</p>
-        <p>Adjust the 4 manual relay levers into the correct configuration, then attempt to initiate launch.</p>
+<div id="transportScreen" class="section" style="text-align: center;">
+    <h2 style="color:red; font-size:36px;">PERSONNEL RELOCATION</h2>
+    <div class="cluster" style="display:inline-block; max-width:800px; text-align:left; font-size:18px; line-height: 1.5;">
+        <p>Your leadership is being taken to Cheyenne Mountain. The current GLP lead and 3 other Cadets must go into the foyer.</p>
+        <p>The POC Administrator will give them some documents. You are allowed to use your phones <b>only</b> to hold a Teams call between the group in the foyer and the group inside Kane 110.</p>
         
-        <div class="lever-container">
-            <button id="lev0" class="lever up" onclick="toggleLever(0)">UP</button>
-            <button id="lev1" class="lever up" onclick="toggleLever(1)">UP</button>
-            <button id="lev2" class="lever up" onclick="toggleLever(2)">UP</button>
-            <button id="lev3" class="lever up" onclick="toggleLever(3)">UP</button>
-        </div>
-
-        <div style="text-align: center;">
-            <button style="padding: 15px 30px; font-size: 20px;" onclick="checkLevers()">TEST COMBINATION & LAUNCH</button>
+        <div style="text-align: center; margin-top: 30px;">
+            <button style="padding: 15px 30px; font-size: 20px;" onclick="showOverrideStage()">Personnel have been transported</button>
         </div>
     </div>
+</div>
+
+<div id="overrideStage" class="section" style="text-align: center; padding-top: 0px;">
+    <h2 style="color:red; font-size:30px; margin-bottom: 5px;">MANUAL OVERRIDE REQUIRED</h2>
+    <p style="font-size:16px; color:yellow; margin-top:0;">Complete all physical overrides to initiate rocket launch!</p>
+    
+    <div class="override-container">
+        
+        <div class="cluster" style="width: 250px;">
+            <h3 style="margin-top:0;">Relay Levers</h3>
+            <p style="font-size: 14px;">We forgot the combination! Figure it out to proceed.</p>
+            <div class="lever-container">
+                <button id="lev0" class="lever up" onclick="toggleLever(0)">UP</button>
+                <button id="lev1" class="lever up" onclick="toggleLever(1)">UP</button>
+                <button id="lev2" class="lever up" onclick="toggleLever(2)">UP</button>
+                <button id="lev3" class="lever up" onclick="toggleLever(3)">UP</button>
+            </div>
+            <button onclick="checkLevers()">TEST LEVERS</button>
+            <p id="leverStatus" style="font-weight:bold; font-size: 18px;"></p>
+        </div>
+
+        <div class="cluster" style="width: 250px;">
+            <h3 style="margin-top:0;">Power Wires</h3>
+            <p style="font-size: 14px;">Cut the correct wire to route power.</p>
+            <div class="wire-container">
+                <div id="w1" class="wire wire-white" onclick="cutWire('white', 'w1')"></div>
+                <div id="w2" class="wire wire-yellow" onclick="cutWire('yellow', 'w2')"></div>
+                <div id="w3" class="wire wire-yellow" onclick="cutWire('yellow', 'w3')"></div>
+                <div id="w4" class="wire wire-blue" onclick="cutWire('blue', 'w4')"></div>
+                <div id="w5" class="wire wire-red" onclick="cutWire('red', 'w5')"></div>
+            </div>
+            <p id="wireStatus" style="font-weight:bold; font-size: 18px;"></p>
+        </div>
+
+        <div class="cluster" style="width: 320px;">
+            <h3 style="margin-top:0;">Guidance Maze</h3>
+            <p style="font-size: 14px;">Navigate to the triangle. (Use buttons or WASD)</p>
+            <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+                <button class="maze-btn" onclick="moveMaze(-1, 0)">◀</button>
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <button class="maze-btn" onclick="moveMaze(0, -1)" style="margin-bottom:5px;">▲</button>
+                    <div class="maze-container" id="mazeGrid"></div>
+                    <button class="maze-btn" onclick="moveMaze(0, 1)" style="margin-top:5px;">▼</button>
+                </div>
+                <button class="maze-btn" onclick="moveMaze(1, 0)">▶</button>
+            </div>
+            <p id="mazeStatus" style="font-weight:bold; font-size: 18px;"></p>
+        </div>
+
+    </div>
+</div>
+
+<div id="debugMenu" style="position:fixed; bottom:15px; left:15px; z-index: 1100; display:none; gap:5px; align-items:center;">
+    <input id="debugInput" placeholder="Code" style="width:60px; font-size:12px; padding:4px;">
+    <button onclick="checkDebug()" style="margin:0; font-size:12px; padding:4px 8px;">???</button>
+</div>
+
+<div id="penaltyPopup">
+    <h1 id="penaltyTitle" style="color:black; font-size:60px; margin-bottom: 0;">INVALID INPUT</h1>
+    <h2 style="color:white; font-size: 40px;">SYSTEM LOCKOUT: <span id="penaltyTime">60</span>s</h2>
+    <p style="color:black; font-weight: bold;">(Do NOT refresh the page)</p>
 </div>
 
 <div id="gameContainer">
@@ -403,7 +478,7 @@
     <p style="margin-top:10px; color:gray;">Left-Click: Scan Sector | Right-Click: Flag Virus</p>
 
     <div style="margin-top: 30px; border-top: 2px dashed #00ffcc; padding-top: 20px; text-align: center; max-width: 600px;">
-        <p>To proceed, enter the cyber officer's decrypted code, the encrypted code is <b>ORTSGMRMTNXJFVVM</b></p>
+        <p>To proceed, enter the cyber officer's decrypted code, the encrypted code is <b>ORTSGRMTNXJFVVM</b></p>
         
         <div class="formula-box" style="font-family: monospace; font-size: 14px; text-align: left;">
             <b>SUBSTITUTION KEY:</b><br>
@@ -451,11 +526,19 @@ function beginMission(){
     timer=setInterval(updateTimer,1000);
 }
 
-// Ensure Cyber Attack doesn't overlap the minigame or full screen transitions
+function checkDebug() {
+    let val = document.getElementById("debugInput").value.trim().toUpperCase();
+    if(val === "DAWG") {
+        document.getElementById("mazeGrid").classList.toggle("debug-maze");
+        document.getElementById("debugInput").value = ""; 
+    }
+}
+
+// Ensure Cyber Attack doesn't overlap the minigames or full screen transitions
 function checkCyberTrigger() {
     if(!document.getElementById("popup")) return;
 
-    if (time <= 44 * 60 && !msTriggered && !gameActive) {
+    if (time <= 44 * 60 && !msTriggered && !gameActive && !penaltyActive) {
         let p1 = document.getElementById("popup").style.display;
         let p2 = document.getElementById("gameControlsPopup").style.display;
         let start = document.getElementById("start").style.display;
@@ -538,9 +621,9 @@ function launchPhase2(){
     ){
         currentPhase = 2;
         
-        if(time > 300) {
+        if(time > 600) { // Over 10 minutes (600 seconds)
             document.getElementById("set2").style.display = "none";
-            document.getElementById("leverStage").style.display = "block";
+            document.getElementById("transportScreen").style.display = "block";
         } else {
             initGameSequence();
         }
@@ -550,28 +633,185 @@ function launchPhase2(){
     }
 }
 
-/* --- LEVER PUZZLE LOGIC --- */
+/* --- OVERRIDE PUZZLES LOGIC --- */
+function showOverrideStage() {
+    document.getElementById("transportScreen").style.display = "none";
+    document.getElementById("overrideStage").style.display = "block";
+    
+    // Show debug menu on this screen
+    document.getElementById("debugMenu").style.display = "flex";
+    
+    renderMaze(); 
+}
+
+let leversSolved = false;
+let wiresSolved = false;
+let mazeSolved = false;
+let penaltyActive = false;
+
+function checkAllOverride() {
+    if (leversSolved && wiresSolved && mazeSolved) {
+        setTimeout(() => {
+            document.getElementById("overrideStage").style.display = "none";
+            
+            // Hide debug menu again
+            document.getElementById("debugMenu").style.display = "none";
+            
+            initGameSequence();
+        }, 1500);
+    }
+}
+
+// 1. LEVERS
 let levers = [1, 1, 1, 1];
 
 function toggleLever(index) {
+    if(leversSolved) return;
     levers[index] = levers[index] === 1 ? 0 : 1;
     let btn = document.getElementById("lev" + index);
     
     if(levers[index] === 1) {
-        btn.className = "lever up";
-        btn.innerText = "UP";
+        btn.className = "lever up"; btn.innerText = "UP";
     } else {
-        btn.className = "lever down";
-        btn.innerText = "DOWN";
+        btn.className = "lever down"; btn.innerText = "DOWN";
     }
 }
 
 function checkLevers() {
+    if(leversSolved) return;
     if (levers[0] === 1 && levers[1] === 0 && levers[2] === 0 && levers[3] === 1) {
-        document.getElementById("leverStage").style.display = "none";
-        initGameSequence();
+        leversSolved = true;
+        document.getElementById("leverStatus").innerText = "LEVERS: LOCKED";
+        document.getElementById("leverStatus").style.color = "lime";
+        checkAllOverride();
     } else {
-        alert("INCORRECT CONFIGURATION. ROCKET UNRESPONSIVE.");
+        alert("INCORRECT CONFIGURATION.");
+    }
+}
+
+// 2. WIRES
+function cutWire(color, elementId) {
+    if (wiresSolved || penaltyActive) return;
+    
+    document.getElementById(elementId).classList.add("cut");
+    
+    if (color === 'white') {
+        wiresSolved = true;
+        document.getElementById("wireStatus").innerText = "WIRES: BYPASSED";
+        document.getElementById("wireStatus").style.color = "lime";
+        checkAllOverride();
+    } else {
+        triggerPenalty(60, "INVALID WIRE CUT");
+    }
+}
+
+// Shared Penalty Function
+function triggerPenalty(seconds, titleMsg) {
+    penaltyActive = true;
+    let p = document.getElementById("penaltyPopup");
+    document.getElementById("penaltyTitle").innerText = titleMsg;
+    p.style.display = "flex";
+    let timeLeft = seconds;
+    document.getElementById("penaltyTime").innerText = timeLeft;
+    
+    let int = setInterval(() => {
+        timeLeft--;
+        document.getElementById("penaltyTime").innerText = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(int);
+            p.style.display = "none";
+            penaltyActive = false;
+            checkCyberTrigger(); 
+        }
+    }, 1000);
+}
+
+// 3. MAZE (KTaNE Right-Middle Authentic Walls)
+let px = 0, py = 5; // Start bottom-left
+let gx = 5, gy = 0; // End top-right
+
+// Correct KTaNE Right-Middle Maze Data (1=wall, 0=path)
+const vWalls = [
+    [1, 0, 1, 0, 0, 0], // Row 0
+    [1, 1, 1, 0, 1, 0], // Row 1
+    [0, 1, 1, 1, 0, 0], // Row 2
+    [0, 1, 0, 1, 1, 0], // Row 3
+    [0, 1, 1, 1, 0, 0], // Row 4
+    [0, 0, 0, 1, 0, 0]  // Row 5
+];
+const hWalls = [
+    [0, 0, 0, 1, 0, 0], // Row 0
+    [0, 0, 0, 0, 1, 0], // Row 1
+    [0, 1, 1, 0, 0, 1], // Row 2
+    [1, 0, 0, 0, 0, 0], // Row 3
+    [0, 1, 1, 0, 1, 0], // Row 4
+    [0, 0, 0, 0, 0, 0]  // Row 5
+];
+
+function renderMaze() {
+    let m = document.getElementById("mazeGrid");
+    m.innerHTML = "";
+    for (let y = 0; y < 6; y++) {
+        let row = document.createElement("div");
+        row.className = "maze-row";
+        for (let x = 0; x < 6; x++) {
+            let cell = document.createElement("div");
+            cell.className = "maze-cell";
+            if (vWalls[y][x]) cell.classList.add("wall-r");
+            if (hWalls[y][x]) cell.classList.add("wall-b");
+            
+            // KTaNE Marker Circles: (Col 5, Row 1) & (Col 3, Row 5) -> Index [4][0] & [2][4]
+            if ((x===4 && y===0) || (x===2 && y===4)) {
+                let circ = document.createElement("div");
+                circ.className = "maze-circles";
+                cell.appendChild(circ);
+            }
+
+            if (x === px && y === py) {
+                let p = document.createElement("div");
+                p.className = "maze-player";
+                cell.appendChild(p);
+            }
+            if (x === gx && y === gy) {
+                let g = document.createElement("div");
+                g.className = "maze-goal";
+                cell.appendChild(g);
+            }
+            row.appendChild(cell);
+        }
+        m.appendChild(row);
+    }
+}
+
+function moveMaze(dx, dy) {
+    if (mazeSolved || penaltyActive) return;
+    let nx = px + dx;
+    let ny = py + dy;
+
+    // Boundary Check
+    if (nx < 0 || nx > 5 || ny < 0 || ny > 5) return; 
+    
+    // Wall Collision Check
+    let hitWall = false;
+    if (dx === 1 && vWalls[py][px]) hitWall = true; 
+    else if (dx === -1 && vWalls[py][nx]) hitWall = true; 
+    else if (dy === 1 && hWalls[py][px]) hitWall = true; 
+    else if (dy === -1 && hWalls[ny][px]) hitWall = true; 
+
+    if(hitWall) {
+        triggerPenalty(15, "WALL IMPACT DETECTED");
+        return;
+    }
+    
+    // Move valid
+    px = nx; py = ny;
+    renderMaze();
+    
+    if (px === gx && py === gy) {
+        mazeSolved = true;
+        document.getElementById("mazeStatus").innerText = "MAZE: ROUTED";
+        document.getElementById("mazeStatus").style.color = "lime";
+        checkAllOverride();
     }
 }
 
@@ -797,7 +1037,16 @@ let explosions = [];
 let keys = {};
 let gameActive = false;
 
-window.addEventListener('keydown', (e) => { keys[e.key] = true; });
+window.addEventListener('keydown', (e) => { 
+    keys[e.key] = true; 
+    
+    if(document.getElementById("overrideStage").style.display === "block" && !penaltyActive) {
+        if(e.key === 'ArrowUp' || e.key === 'w') moveMaze(0, -1);
+        if(e.key === 'ArrowDown' || e.key === 's') moveMaze(0, 1);
+        if(e.key === 'ArrowLeft' || e.key === 'a') moveMaze(-1, 0);
+        if(e.key === 'ArrowRight' || e.key === 'd') moveMaze(1, 0);
+    }
+});
 window.addEventListener('keyup', (e) => { keys[e.key] = false; });
 
 function resizeCanvas(){
@@ -816,7 +1065,7 @@ function startGameEngine(){
     // Setup ICBM Path to land exactly at bottom right (canvas.width, canvas.height)
     icbm.x = 0;
     icbm.y = canvas.height / 2; 
-    let framesToLand = 1000; // Total frames of flight time
+    let framesToLand = 1000; 
     icbm.vx = canvas.width / framesToLand;
     icbm.vy = (canvas.height - (canvas.height / 2) - (0.5 * icbm.g * framesToLand * framesToLand)) / framesToLand;
     
