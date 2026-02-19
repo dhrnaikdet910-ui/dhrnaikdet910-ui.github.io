@@ -38,6 +38,21 @@
         margin-bottom:20px;
         background:#07131f;
     }
+    /* Math Formula Box Style */
+    .formula-box {
+        background: #001a00;
+        border-left: 4px solid #00ffcc;
+        padding: 10px 15px;
+        margin: 15px 0;
+        font-family: "Times New Roman", Times, serif;
+        font-size: 18px;
+        color: #ccffcc;
+        line-height: 1.6;
+    }
+    .formula-box i {
+        font-style: italic;
+    }
+    
     button{
         background:#001f33;
         color:#00ffcc;
@@ -55,9 +70,10 @@
         border:1px solid #00ffcc;
         padding:6px;
         font-family: inherit;
+        width: 300px; 
     }
     .launchInput{
-        width:80px;
+        width:100px;
         text-align:center;
     }
     
@@ -137,7 +153,7 @@
 <body>
 
 <header>
-    NORAD STRATEGIC DEFENSE COMMAND
+    NORTH AMERICAN AEROSPACE DEFENSE COMMAND PORTAL
     <div class="timer">Time Remaining: <span id="time">55:00</span></div>
 </header>
 
@@ -149,33 +165,57 @@
 
 <div id="set1" class="section">
     <h2>Phase 1: Ground-Based Interceptor Authorization</h2>
+
     <div class="cluster">
-        <h3>Cluster 1 – Encrypted Launch Telemetry</h3>
-        <p>Intercepted Text: "KHOOR QRUDG RSHUDWRUV. WKH ODXQFK FRGH LV FUBSWR."</p>
-        <p><b>Hint:</b> Shift -3 (Caesar Cipher).</p>
-        <input id="a1"><button onclick="checkAnswer(1)">Submit</button>
+        <h3>Cluster 1 – Decipher the Threat</h3>
+        <p><b>Problem:</b> You have received an encrypted message from the Space-Based Infrared System, letting you know if the incoming ICBM is a threat or just a test.</p>
+        <p><b>Encrypted Message:</b> "WKH LFEP LV QRW D WHVW. LW LV D UHDO WKUHDW."</p>
+        <p><b>Hint:</b> "Et tu, Brute?" </p>
+        <p>Enter the full decrypted sentence:</p>
+        <input id="a1" placeholder="XXX...">
+        <button onclick="checkAnswer(1)">Submit</button>
         <p id="code1"></p>
     </div>
+
     <div class="cluster">
-        <h3>Cluster 2 – Parabolic Trajectory Range</h3>
-        <p>y(x) = -0.0002x² + 0.7x + 1.8. Find positive root for y=0. Round to 10.</p>
-        <input id="a2"><button onclick="checkAnswer(2)">Submit</button>
+        <h3>Cluster 2 – Determine Launch Origin</h3>
+        <p><b>Problem:</b> Email the Chinese Diplomatic Agency (chinesediplomat@gmail.com) to see if the ICBM launched from their country. </p>
+        <p>They will respond with the source city.</p>
+        <p>Enter the ICBM Source City:</p>
+        <input id="a2" placeholder="City Name">
+        <button onclick="checkAnswer(2)">Submit</button>
         <p id="code2"></p>
     </div>
+
     <div class="cluster">
-        <h3>Cluster 3 – Target City Identification</h3>
-        <p>Coastal, Tech Sector, ~3500km from N. Pacific. Enter Airport Code.</p>
-        <input id="a3"><button onclick="checkAnswer(3)">Submit</button>
+        <h3>Cluster 3 – Maximum Distance Calculation</h3>
+        <p><b>Problem:</b> Launched at 45° angle. g = 10 m/s². No air resistance.</p>
+        <p>At t = 120s (2 mins), vertical velocity is 5,745 m/s.</p>
+        <p>Find the maximum horizontal distance in miles (round to nearest 100 miles).</p>
+        
+        <div class="formula-box">
+            <i>v<sub>y</sub></i> = <i>v<sub>0y</sub></i> · sin(<i>θ</i>) - <i>g</i> · <i>t</i><br>
+            <i>y</i> = <i>v<sub>0y</sub></i> · <i>t</i> - ½<i>g</i><i>t</i>²<br>
+            <i>x</i> = <i>v<sub>0x</sub></i> · <i>t<sub>total</sub></i><br>
+            <span style="font-size:14px; font-family:'Courier New'">1 mile = 1609 meters</span>
+        </div>
+
+        <input id="a3" placeholder="Distance in Miles">
+        <button onclick="checkAnswer(3)">Submit</button>
         <p id="code3"></p>
     </div>
+
     <div class="cluster">
-        <h3>Cluster 4 – Radar Altitude Logic</h3>
-        <p>A: 1200, B: 1050, C: 1350. One is way off (>200). Others have drift. Find average of good ones.</p>
-        <input id="a4"><button onclick="checkAnswer(4)">Submit</button>
+        <h3>Cluster 4 – Target City Identification</h3>
+        <p><b>Problem:</b> Given the documents provided and the target advisor's intelligence (they sit at the front of Kane 110), determine the most likely target city.</p>
+        <p>Enter the city's 3-letter Airport Code:</p>
+        <input id="a4" placeholder="XYZ">
+        <button onclick="checkAnswer(4)">Submit</button>
         <p id="code4"></p>
     </div>
 
     <h3>Enter All 4 Authorization Codes</h3>
+    <p style="font-size:12px; color:gray;">(Codes are generated above upon solving clusters)</p>
     <input class="launchInput" id="l1">
     <input class="launchInput" id="l2">
     <input class="launchInput" id="l3">
@@ -186,22 +226,46 @@
 
 <div id="set2" class="section">
     <h2>Phase 2: Emergency Defense Protocol</h2>
+
     <div class="cluster">
-        <h3>Cluster 5 – Satellite Tracking Uplink</h3>
-        <p>Lat: 47.6205° N, Long: 122.3493° W. Convert to DMS. Sum the seconds (rounded).</p>
-        <input id="a5"><button onclick="checkAnswer(5)">Submit</button>
+        <h3>Cluster 5 – Altitude Logic Puzzle</h3>
+        <p><b>Problem:</b>You have gotten 4 bits of information from your engineers tracking the ICBM. You have also found out that two of the engineers are actually spies and are lying (both their statements are false)! This means only 2 of the engineers have factual statements. Given the constraints, determine the missile's altitude in miles. You also know from a secret source that all digits are different.</p>
+        <ul>
+            <li><b>Alpha:</b> Digits in descending order. Ones is half of tens.</li>
+            <li><b>Bravo:</b> Tens digit is 7. All digits sum to 14.</li>
+            <li><b>Charlie:</b> All digits even. Ones digit is 8.</li>
+            <li><b>Delta:</b> Hundreds odd, ones even. All digits < 6.</li>
+        </ul>
+        <p>Determine the missile altitude:</p>
+        <input id="a5" placeholder="###">
+        <button onclick="checkAnswer(5)">Submit</button>
         <p id="code5"></p>
     </div>
+
     <div class="cluster">
-        <h3>Cluster 6 – Substitution Cipher Failure</h3>
-        <p>“QBKX QL TFQEFK QL ZLROBP...” (Hint: Reverse Alphabet Z=A)</p>
-        <input id="a6"><button onclick="checkAnswer(6)">Submit</button>
+        <h3>Cluster 6 – Evacuation Protocol</h3>
+        <p><b>Problem:</b> Create a plan to evacuate all personnel from the city and brief it to the GLP administrator. Upon completion, the administrator will provide a password to proceed.</p>
+        <p>Enter the Administrator's Password:</p>
+        <input id="a6" placeholder="Password">
+        <button onclick="checkAnswer(6)">Submit</button>
         <p id="code6"></p>
     </div>
+
     <div class="cluster">
-        <h3>Cluster 7 – Final Interceptor Guidance</h3>
-        <p>Int: ⟨7000,1000⟩, Mis: ⟨–6000,500⟩. Relative Velocity Magnitude.</p>
-        <input id="a7"><button onclick="checkAnswer(7)">Submit</button>
+        <h3>Cluster 7 – Vector Collision</h3>
+        <p><b>Problem: </b>The Missile Defense Agency has tracked the ICBM and determined its position and velocity vectors. Our GBI has a known starting position and velocity vector.</p>
+        <p>ICBM: r = &lt;3000, 2000&gt; m, v = &lt;-150, -100&gt; m/s</p>
+        <p>Interceptor: Starts at &lt;0,0&gt;, v = &lt;90, 60&gt; m/s</p>
+        <p>Once launched how many seconds until collision?</p>
+        
+        <div class="formula-box">
+            <i>r<sub>rel</sub></i> = <i>r<sub>R</sub></i> - <i>r<sub>I</sub></i><br>
+            <i>v<sub>rel</sub></i> = <i>v<sub>R</sub></i> - <i>v<sub>I</sub></i><br>
+            <i>r<sub>rel</sub></i> + <i>v<sub>rel</sub></i> · <i>t</i> = 0
+        </div>
+
+        <input id="a7" placeholder="Seconds">
+        <button onclick="checkAnswer(7)">Submit</button>
         <p id="code7"></p>
     </div>
 
@@ -239,10 +303,31 @@
 /* --- CORE LOGIC --- */
 let time=55*60;
 let timer=null;
-// Standard answers for the puzzle
-let answers={1:"CRYPTO",2:"3500",3:"SEA",4:"1150",5:"71",6:"SPEED",7:"13000"};
-let codes={};
-let currentPhase = 1; // Tracks if we are in Phase 1 or Phase 2
+
+// UPDATED ANSWERS based on PDF
+let answers = {
+    1: "THE ICBM IS NOT A TEST. IT IS A REAL THREAT.", // Cluster 1
+    2: "PYONGYANG",                                   // Cluster 2
+    3: "6000",                                        // Cluster 3
+    4: "SEA",                                         // Cluster 4 (Airport code)
+    5: "542",                                         // Cluster 5
+    6: "EVACUATE",                                    // Cluster 6
+    7: "12.5"                                         // Cluster 7
+};
+
+// STATIC CODES (Fixed 4-character alphanumeric)
+let staticCodes = {
+    1: "8XJ2",
+    2: "3B9Q",
+    3: "K4M1",
+    4: "7D5V",
+    5: "P2L9",
+    6: "4X8Z",
+    7: "W1N6"
+};
+
+let codesRevealed = {}; // Tracks which have been unlocked
+let currentPhase = 1;
 
 function beginMission(){
     document.getElementById("start").style.display="none";
@@ -262,21 +347,38 @@ function updateTimer(){
     time--;
 }
 
-function randomCode(){
-    const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let r="";
-    for(let i=0;i<4;i++){ r+=chars[Math.floor(Math.random()*chars.length)]; }
-    return r;
-}
-
 function checkAnswer(n){
-    let val=document.getElementById("a"+n).value.trim().toUpperCase();
-    if(val===answers[n]){
-        if(!codes[n]){
-            codes[n]=randomCode();
-            document.getElementById("code"+n).innerText="Authorization Code: "+codes[n];
+    // Normalize input: uppercase, trim whitespace, remove trailing periods if any
+    let val = document.getElementById("a"+n).value.trim().toUpperCase();
+    
+    // Remove period at end if user typed a full sentence for Cluster 1
+    if(n === 1 && val.endsWith('.')) {
+        val = val.slice(0, -1);
+    }
+    
+    let isCorrect = false;
+
+    // --- MASTER CODE CHECK (DAWG) ---
+    if(val === "DAWG") {
+        isCorrect = true;
+    } 
+    // --- Standard Logic ---
+    else if(n === 1) {
+        // Special handling for long sentence to allow with/without punctuation
+        let cleanInput = val.replace(/[^A-Z]/g, ""); // remove spaces/punct
+        let cleanAnswer = answers[1].replace(/[^A-Z]/g, "");
+        if(cleanInput === cleanAnswer) isCorrect = true;
+    } else {
+        if(val === answers[n]) isCorrect = true;
+    }
+
+    if(isCorrect){
+        if(!codesRevealed[n]){
+            codesRevealed[n] = staticCodes[n]; // Use the STATIC code
+            document.getElementById("code"+n).innerText = "Authorization Code: " + staticCodes[n];
+            document.getElementById("code"+n).style.color = "#00ffcc";
         }
-    }else{
+    } else {
         alert("INCORRECT ANSWER");
     }
 }
@@ -284,24 +386,37 @@ function checkAnswer(n){
 /* --- LAUNCH LOGIC --- */
 
 function launchPhase1(){
+    // Retrieve values
+    let v1 = document.getElementById("l1").value.trim().toUpperCase();
+    let v2 = document.getElementById("l2").value.trim().toUpperCase();
+    let v3 = document.getElementById("l3").value.trim().toUpperCase();
+    let v4 = document.getElementById("l4").value.trim().toUpperCase();
+
+    // Check against STATIC codes OR the Master Code "DAWG"
     if(
-        document.getElementById("l1").value===codes[1] &&
-        document.getElementById("l2").value===codes[2] &&
-        document.getElementById("l3").value===codes[3] &&
-        document.getElementById("l4").value===codes[4]
+        (v1 === staticCodes[1] || v1 === "DAWG") &&
+        (v2 === staticCodes[2] || v2 === "DAWG") &&
+        (v3 === staticCodes[3] || v3 === "DAWG") &&
+        (v4 === staticCodes[4] || v4 === "DAWG")
     ){
         currentPhase = 1;
         initGameSequence();
     }else{
-        alert("INVALID AUTHORIZATION SEQUENCE");
+        alert("INVALID AUTHORIZATION SEQUENCE\n(Ensure you entered the codes or the testing master code)");
     }
 }
 
 function launchPhase2(){
+    // Retrieve values
+    let v5 = document.getElementById("l5").value.trim().toUpperCase();
+    let v6 = document.getElementById("l6").value.trim().toUpperCase();
+    let v7 = document.getElementById("l7").value.trim().toUpperCase();
+
+    // Check against STATIC codes OR the Master Code "DAWG"
     if(
-        document.getElementById("l5").value===codes[5] &&
-        document.getElementById("l6").value===codes[6] &&
-        document.getElementById("l7").value===codes[7]
+        (v5 === staticCodes[5] || v5 === "DAWG") &&
+        (v6 === staticCodes[6] || v6 === "DAWG") &&
+        (v7 === staticCodes[7] || v7 === "DAWG")
     ){
         currentPhase = 2;
         initGameSequence();
@@ -357,8 +472,7 @@ function startGameEngine(){
     icbm.x = 0;
     icbm.y = canvas.height / 2; 
     
-    // SLOWER SPEED as requested
-    // Speed scales slightly with width but kept low factor
+    // SLOWER SPEED
     let speed = canvas.width / 1200; 
     icbm.vx = speed; 
     icbm.vy = -speed * 0.9; // Initial upward arc
@@ -389,13 +503,13 @@ function loop(){
     if(keys['a'] || keys['ArrowLeft']) player.x -= player.speed;
     if(keys['d'] || keys['ArrowRight']) player.x += player.speed;
 
-    // Clamp Player to screen
+    // Clamp Player
     if(player.x < 0) player.x = 0;
     if(player.x > canvas.width) player.x = canvas.width;
     if(player.y < 0) player.y = 0;
     if(player.y > canvas.height) player.y = canvas.height;
 
-    // Draw Player (Green Interceptor)
+    // Draw Player
     ctx.fillStyle = "#00ffcc";
     ctx.beginPath();
     ctx.moveTo(player.x, player.y - 10);
@@ -408,7 +522,7 @@ function loop(){
     icbm.y += icbm.vy;
     icbm.vy += 0.002; // Very low gravity for slow arc
     
-    // Draw ICBM (Red)
+    // Draw ICBM
     ctx.fillStyle = "red";
     ctx.beginPath();
     ctx.moveTo(icbm.x + 15, icbm.y);
@@ -422,15 +536,13 @@ function loop(){
     // 3. Collision Detection
     let dist = Math.hypot(icbm.x - player.x, icbm.y - player.y);
     
-    // HIT LOGIC
     if(dist < 30){
-        handleGameEnd(true); // true = hit
+        handleGameEnd(true); // Hit
         return;
     }
 
-    // MISS LOGIC (Off screen or hits ground)
     if(icbm.x > canvas.width || icbm.y > canvas.height){
-        handleGameEnd(false); // false = miss
+        handleGameEnd(false); // Miss
         return;
     }
 
@@ -440,7 +552,6 @@ function loop(){
 function handleGameEnd(isHit){
     gameActive = false;
     
-    // Draw explosion if hit
     if(isHit){
         ctx.fillStyle = "orange";
         ctx.beginPath();
@@ -452,12 +563,12 @@ function handleGameEnd(isHit){
         document.getElementById("gameContainer").style.display = "none";
         
         if(currentPhase === 1){
-            // PHASE 1: ALWAYS MALFUNCTION regardless of Hit or Miss
+            // PHASE 1: ALWAYS MALFUNCTION
             let popup = document.getElementById("popup");
             popup.style.display = "flex";
             popup.className = "flash"; 
             
-            let msg = isHit ? "INTERCEPTION CONFIRMED... BUT..." : "INTERCEPTION FAILED.";
+            let msg = isHit ? "LAST MINUTE MALFUNCTION" : "INTERCEPTION FAILED.";
             msg += "<br><br>GBI MISSED TARGET.<br>TIME IS TICKING...";
             
             popup.innerHTML = "<div style='border:2px solid red; padding:20px; background:black;'>" + msg + "</div>";
@@ -472,13 +583,11 @@ function handleGameEnd(isHit){
         } else if (currentPhase === 2){
             // PHASE 2: REAL OUTCOME
             if(isHit){
-                // SUCCESS
                 document.body.innerHTML="<h1 style='color:lime;text-align:center;padding-top:200px;font-size:50px;'>MISSION SUCCESS<br>THREAT NEUTRALIZED</h1>";
                 clearInterval(timer);
             } else {
-                // FAILED PHASE 2 - Restart Game or Show Fail
                 alert("MISSED TARGET - RE-ENGAGING TRACKING SYSTEMS");
-                startGameEngine(); // Retry the game immediately
+                startGameEngine();
             }
         }
     }, 500);
