@@ -19,7 +19,6 @@
         font-size:26px;
         border-bottom:2px solid #00ffcc;
         position: relative;
-        /* Increased Z-index so it stays on top of penalty popups */
         z-index: 2001; 
     }
     .timer{
@@ -84,6 +83,17 @@
         gap: 30px;
         margin-top: 20px;
     }
+    
+    /* Uniform Box Sizing */
+    .override-box {
+        width: 320px;
+        height: 420px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box;
+    }
 
     /* Levers */
     .lever-container {
@@ -111,6 +121,8 @@
         padding: 20px;
         border: 2px solid #555;
         margin: 20px 0;
+        width: 80%;
+        align-items: center;
     }
     .wire {
         width: 150px;
@@ -126,7 +138,7 @@
     .wire-blue { background: #0066ff; }
     .wire-red { background: #cc0000; }
 
-    /* Maze (Invisible Walls Update) */
+    /* Maze */
     .maze-container {
         background: #000;
         border: 2px solid transparent; 
@@ -142,21 +154,17 @@
         border: 1px dotted transparent;
         position: relative;
     }
-    /* ADDED: Center dot for each cell to make the grid visible */
     .maze-cell::before {
         content: "";
         position: absolute;
-        width: 4px;
-        height: 4px;
+        width: 4px; height: 4px;
         background: #444; 
         border-radius: 50%;
-        top: 50%;
-        left: 50%;
+        top: 50%; left: 50%;
         transform: translate(-50%, -50%);
         z-index: 1;
     }
     
-    /* Walls made transparent so they are invisible to player */
     .wall-r { border-right: 2px solid transparent; }
     .wall-b { border-bottom: 2px solid transparent; }
     
@@ -186,16 +194,13 @@
 
     /* POPUP STYLES */
     #popup, #gameControlsPopup, #msPopup, #penaltyPopup{
-        position:fixed;
-        top:0; left:0; width:100%; height:100%;
+        position:fixed; top:0; left:0; width:100%; height:100%;
         background:rgba(0,0,0,0.95);
         display:none;
         flex-direction: column; justify-content:center; align-items:center;
         font-size:30px; text-align:center; box-sizing: border-box;
     }
     #popup, #gameControlsPopup, #msPopup { z-index: 900; border: 2px solid #00ffcc; }
-    
-    /* Penalty popup z-index lower than header */
     #penaltyPopup { z-index: 2000; background:rgba(200,0,0,0.95); border: 4px solid black;}
     
     .flash { animation:flash 0.6s infinite; }
@@ -382,22 +387,28 @@
     
     <div class="override-container">
         
-        <div class="cluster" style="width: 250px;">
-            <h3 style="margin-top:0;">Relay Levers</h3>
-            <p style="font-size: 14px;">We forgot the combination! Figure it out to proceed.</p>
+        <div class="cluster override-box">
+            <div style="width: 100%;">
+                <h3 style="margin-top:0;">Relay Levers</h3>
+                <p style="font-size: 14px;">We forgot the combination! Figure it out to proceed.</p>
+            </div>
             <div class="lever-container">
                 <button id="lev0" class="lever up" onclick="toggleLever(0)">UP</button>
                 <button id="lev1" class="lever up" onclick="toggleLever(1)">UP</button>
                 <button id="lev2" class="lever up" onclick="toggleLever(2)">UP</button>
                 <button id="lev3" class="lever up" onclick="toggleLever(3)">UP</button>
             </div>
-            <button onclick="checkLevers()">TEST LEVERS</button>
-            <p id="leverStatus" style="font-weight:bold; font-size: 18px;"></p>
+            <div style="width: 100%;">
+                <button onclick="checkLevers()">TEST LEVERS</button>
+                <p id="leverStatus" style="font-weight:bold; font-size: 18px; min-height: 20px;"></p>
+            </div>
         </div>
 
-        <div class="cluster" style="width: 250px;">
-            <h3 style="margin-top:0;">Power Wires</h3>
-            <p style="font-size: 14px;">Cut the correct wire to route power.</p>
+        <div class="cluster override-box">
+            <div style="width: 100%;">
+                <h3 style="margin-top:0;">Power Wires</h3>
+                <p style="font-size: 14px;">Cut the correct wire to route power.</p>
+            </div>
             <div class="wire-container">
                 <div id="w1" class="wire wire-white" onclick="cutWire('white', 'w1')"></div>
                 <div id="w2" class="wire wire-yellow" onclick="cutWire('yellow', 'w2')"></div>
@@ -405,12 +416,16 @@
                 <div id="w4" class="wire wire-blue" onclick="cutWire('blue', 'w4')"></div>
                 <div id="w5" class="wire wire-red" onclick="cutWire('red', 'w5')"></div>
             </div>
-            <p id="wireStatus" style="font-weight:bold; font-size: 18px;"></p>
+            <div style="width: 100%;">
+                <p id="wireStatus" style="font-weight:bold; font-size: 18px; min-height: 20px;"></p>
+            </div>
         </div>
 
-        <div class="cluster" style="width: 320px;">
-            <h3 style="margin-top:0;">Guidance Maze</h3>
-            <p style="font-size: 14px;">Navigate to the triangle. (Use buttons or WASD)</p>
+        <div class="cluster override-box">
+            <div style="width: 100%;">
+                <h3 style="margin-top:0;">Guidance Maze</h3>
+                <p style="font-size: 14px;">Navigate to the triangle. (Use buttons or WASD)</p>
+            </div>
             <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
                 <button class="maze-btn" onclick="moveMaze(-1, 0)">◀</button>
                 <div style="display:flex; flex-direction:column; align-items:center;">
@@ -420,7 +435,9 @@
                 </div>
                 <button class="maze-btn" onclick="moveMaze(1, 0)">▶</button>
             </div>
-            <p id="mazeStatus" style="font-weight:bold; font-size: 18px;"></p>
+            <div style="width: 100%;">
+                <p id="mazeStatus" style="font-weight:bold; font-size: 18px; min-height: 20px;"></p>
+            </div>
         </div>
 
     </div>
@@ -428,7 +445,7 @@
 
 <div id="debugMenu" style="position:fixed; bottom:15px; left:15px; z-index: 1100; display:none; gap:5px; align-items:center;">
     <input id="debugInput" placeholder="Code" style="width:60px; font-size:12px; padding:4px;">
-    <button onclick="checkDebug()" style="margin:0; font-size:12px; padding:4px 8px;">???</button>
+    <button onclick="checkDebug()" style="margin:0; font-size:12px; padding:4px 8px;">DEBUG</button>
 </div>
 
 <div id="penaltyPopup">
@@ -472,8 +489,10 @@
 </div>
 
 <div id="msGameContainer">
-    <h2 style="color:red; margin-bottom: 20px;">SYSTEM OVERRIDE REQUIRED</h2>
+    <h2 style="color:red; margin-bottom: 10px;">SYSTEM OVERRIDE REQUIRED</h2>
     
+    <p id="msFlagCounter" style="color:yellow; font-weight:bold; font-size:22px; margin: 10px 0;">VIRUSES UNFLAGGED: 10</p>
+
     <div id="msGrid" oncontextmenu="return false;"></div>
     <p style="margin-top:10px; color:gray;">Left-Click: Scan Sector | Right-Click: Flag Virus</p>
 
@@ -499,6 +518,83 @@
 <button id="skipBtn" onclick="skipTime()">⚠ DO NOT PRESS</button>
 
 <script>
+/* --- WEB AUDIO API (SOUND EFFECTS) --- */
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playSound(type) {
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    const now = audioCtx.currentTime;
+    
+    if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+        gainNode.gain.setValueAtTime(0.1, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now); osc.stop(now + 0.1);
+    } else if (type === 'error') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, now);
+        gainNode.gain.setValueAtTime(0.2, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now); osc.stop(now + 0.3);
+    } else if (type === 'success') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.setValueAtTime(600, now + 0.1);
+        osc.frequency.setValueAtTime(800, now + 0.2);
+        gainNode.gain.setValueAtTime(0.05, now);
+        gainNode.gain.linearRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now); osc.stop(now + 0.3);
+    } else if (type === 'ms_reveal') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+        gainNode.gain.setValueAtTime(0.05, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+        osc.start(now); osc.stop(now + 0.05);
+    } else if (type === 'ms_flag') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(900, now);
+        gainNode.gain.setValueAtTime(0.05, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now); osc.stop(now + 0.1);
+    } else if (type === 'explosion') {
+        let bufferSize = audioCtx.sampleRate * 0.5; 
+        let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        let data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+        let noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+        let filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass'; filter.frequency.value = 1000;
+        noise.connect(filter); filter.connect(gainNode);
+        gainNode.gain.setValueAtTime(0.3, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+        noise.start(now);
+    } else if (type === 'rocket_thrust') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(100, now);
+        gainNode.gain.setValueAtTime(0.02, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+        osc.start(now); osc.stop(now + 0.1);
+    }
+}
+
+// Global UI click sounds
+document.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' || e.target.classList.contains('wire') || e.target.classList.contains('lever')) {
+        // Exclude elements that have their own specific sound effects 
+        if(!e.target.classList.contains('maze-btn') && !e.target.classList.contains('ms-cell')) {
+             playSound('click');
+        }
+    }
+});
+
+
 /* --- CORE LOGIC --- */
 let time=55*60;
 let timer=null;
@@ -546,6 +642,7 @@ function checkCyberTrigger() {
         if (p1 !== "flex" && p2 !== "flex" && start === "none") {
             msTriggered = true;
             document.getElementById("msPopup").style.display = "flex";
+            playSound('error');
         }
     }
 }
@@ -560,6 +657,7 @@ function updateTimer(){
 
     if(time<=0){
         document.body.innerHTML="<h1 style='color:red;text-align:center;padding-top:200px; position:relative; z-index:9999;'>MISSION FAILURE<br>ITS TOO LATE TO STOP THE ATTACK, USA IS COMPROMISED</h1>";
+        playSound('explosion');
         clearInterval(timer);
     }
     time--;
@@ -584,8 +682,10 @@ function checkAnswer(n){
             codesRevealed[n] = staticCodes[n]; 
             document.getElementById("code"+n).innerText = "Authorization Code: " + staticCodes[n];
             document.getElementById("code"+n).style.color = "#00ffcc";
+            playSound('success');
         }
     } else {
+        playSound('error');
         alert("INCORRECT ANSWER");
     }
 }
@@ -605,6 +705,7 @@ function launchPhase1(){
         currentPhase = 1;
         initGameSequence();
     }else{
+        playSound('error');
         alert("INVALID AUTHORIZATION SEQUENCE");
     }
 }
@@ -629,6 +730,7 @@ function launchPhase2(){
         }
 
     }else{
+        playSound('error');
         alert("INVALID AUTHORIZATION SEQUENCE");
     }
 }
@@ -637,10 +739,7 @@ function launchPhase2(){
 function showOverrideStage() {
     document.getElementById("transportScreen").style.display = "none";
     document.getElementById("overrideStage").style.display = "block";
-    
-    // Show debug menu on this screen
     document.getElementById("debugMenu").style.display = "flex";
-    
     renderMaze(); 
 }
 
@@ -651,12 +750,10 @@ let penaltyActive = false;
 
 function checkAllOverride() {
     if (leversSolved && wiresSolved && mazeSolved) {
+        playSound('success');
         setTimeout(() => {
             document.getElementById("overrideStage").style.display = "none";
-            
-            // Hide debug menu again
             document.getElementById("debugMenu").style.display = "none";
-            
             initGameSequence();
         }, 1500);
     }
@@ -683,8 +780,10 @@ function checkLevers() {
         leversSolved = true;
         document.getElementById("leverStatus").innerText = "LEVERS: LOCKED";
         document.getElementById("leverStatus").style.color = "lime";
+        playSound('success');
         checkAllOverride();
     } else {
+        playSound('error');
         alert("INCORRECT CONFIGURATION.");
     }
 }
@@ -699,6 +798,7 @@ function cutWire(color, elementId) {
         wiresSolved = true;
         document.getElementById("wireStatus").innerText = "WIRES: BYPASSED";
         document.getElementById("wireStatus").style.color = "lime";
+        playSound('success');
         checkAllOverride();
     } else {
         triggerPenalty(60, "INVALID WIRE CUT");
@@ -707,6 +807,7 @@ function cutWire(color, elementId) {
 
 // Shared Penalty Function
 function triggerPenalty(seconds, titleMsg) {
+    playSound('error');
     penaltyActive = true;
     let p = document.getElementById("penaltyPopup");
     document.getElementById("penaltyTitle").innerText = titleMsg;
@@ -760,7 +861,6 @@ function renderMaze() {
             if (vWalls[y][x]) cell.classList.add("wall-r");
             if (hWalls[y][x]) cell.classList.add("wall-b");
             
-            // KTaNE Marker Circles: (Col 5, Row 1) & (Col 3, Row 5) -> Index [4][0] & [2][4]
             if ((x===4 && y===0) || (x===2 && y===4)) {
                 let circ = document.createElement("div");
                 circ.className = "maze-circles";
@@ -785,13 +885,12 @@ function renderMaze() {
 
 function moveMaze(dx, dy) {
     if (mazeSolved || penaltyActive) return;
+    playSound('click');
     let nx = px + dx;
     let ny = py + dy;
 
-    // Boundary Check
     if (nx < 0 || nx > 5 || ny < 0 || ny > 5) return; 
     
-    // Wall Collision Check
     let hitWall = false;
     if (dx === 1 && vWalls[py][px]) hitWall = true; 
     else if (dx === -1 && vWalls[py][nx]) hitWall = true; 
@@ -803,7 +902,6 @@ function moveMaze(dx, dy) {
         return;
     }
     
-    // Move valid
     px = nx; py = ny;
     renderMaze();
     
@@ -811,6 +909,7 @@ function moveMaze(dx, dy) {
         mazeSolved = true;
         document.getElementById("mazeStatus").innerText = "MAZE: ROUTED";
         document.getElementById("mazeStatus").style.color = "lime";
+        playSound('success');
         checkAllOverride();
     }
 }
@@ -886,6 +985,7 @@ function initMinesweeper() {
             msData[r][c].adjacent = count;
         }
     }
+    document.getElementById("msFlagCounter").innerText = "VIRUSES UNFLAGGED: " + msStaticMines.length;
     renderMsGrid();
 }
 
@@ -930,13 +1030,15 @@ function msClick(r, c) {
     if(cell.flagged || cell.revealed) return;
     
     cell.revealed = true;
+    playSound('ms_reveal');
     
     if(cell.mine) {
+        playSound('explosion');
         renderMsGrid(); 
         setTimeout(() => {
             alert("VIRUS TRIGGERED. REBOOTING SYSTEM...");
             initMinesweeper(); 
-        }, 300);
+        }, 500);
         return;
     }
     
@@ -958,7 +1060,25 @@ function msFlag(r, c) {
     if(msWon) return;
     let cell = msData[r][c];
     if(cell.revealed) return;
+    
+    // Count active flags
+    let currentFlags = 0;
+    for(let row of msData) for(let col of row) if(col.flagged) currentFlags++;
+    
+    // Prevent adding more flags than total mines
+    if(!cell.flagged && currentFlags >= msStaticMines.length) {
+        playSound('error');
+        return;
+    }
+    
     cell.flagged = !cell.flagged;
+    playSound('ms_flag');
+    
+    // Update count after toggle
+    currentFlags = 0;
+    for(let row of msData) for(let col of row) if(col.flagged) currentFlags++;
+    document.getElementById("msFlagCounter").innerText = "VIRUSES UNFLAGGED: " + (msStaticMines.length - currentFlags);
+    
     renderMsGrid();
 }
 
@@ -976,6 +1096,7 @@ function checkMsWin() {
     
     if(revealedSafe === totalSafe && !msWon) {
         msWon = true;
+        playSound('success');
         setTimeout(() => {
             alert("VIRUSES ISOLATED. SERVER CORE STABILIZED.");
             evaluateCyberClear();
@@ -987,11 +1108,13 @@ function verifyCyberCode() {
     let val = document.getElementById("cyberCodeInput").value.trim().toUpperCase();
     if(val === "LIGHTNINGMCQUEEN" || val === "DAWG") {
         codeAccepted = true;
+        playSound('success');
         document.getElementById("cyberCodeStatus").innerText = "CODE ACCEPTED";
         document.getElementById("cyberCodeStatus").style.color = "lime";
         document.getElementById("cyberCodeInput").disabled = true;
         evaluateCyberClear();
     } else {
+        playSound('error');
         alert("INCORRECT DECRYPTION");
     }
 }
@@ -1036,6 +1159,7 @@ let player = { x: 0, y: 0, speed: 5, w: 20, h: 20 };
 let explosions = [];
 let keys = {};
 let gameActive = false;
+let frameCount = 0;
 
 window.addEventListener('keydown', (e) => { 
     keys[e.key] = true; 
@@ -1062,7 +1186,6 @@ function startGameEngine(){
     player.x = canvas.width / 2;
     player.y = canvas.height - 100;
     
-    // Setup ICBM Path to land exactly at bottom right (canvas.width, canvas.height)
     icbm.x = 0;
     icbm.y = canvas.height / 2; 
     let framesToLand = 1000; 
@@ -1071,11 +1194,13 @@ function startGameEngine(){
     
     explosions = [];
     gameActive = true;
+    frameCount = 0;
     loop();
 }
 
 function loop(){
     if(!gameActive) return;
+    frameCount++;
 
     ctx.fillStyle = "rgba(0, 10, 0, 0.4)"; 
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1087,12 +1212,14 @@ function loop(){
     for(let i=0; i<canvas.height; i+=100){ ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); }
     ctx.stroke();
 
-    if(keys['w'] || keys['ArrowUp']) player.y -= player.speed;
-    if(keys['s'] || keys['ArrowDown']) player.y += player.speed;
-    if(keys['a'] || keys['ArrowLeft']) player.x -= player.speed;
-    if(keys['d'] || keys['ArrowRight']) player.x += player.speed;
+    let isMoving = false;
+    if(keys['w'] || keys['ArrowUp']) { player.y -= player.speed; isMoving = true; }
+    if(keys['s'] || keys['ArrowDown']) { player.y += player.speed; isMoving = true; }
+    if(keys['a'] || keys['ArrowLeft']) { player.x -= player.speed; isMoving = true; }
+    if(keys['d'] || keys['ArrowRight']) { player.x += player.speed; isMoving = true; }
+    
+    if (isMoving && frameCount % 8 === 0) playSound('rocket_thrust');
 
-    // Strict Padding Limits to keep Player on screen fully
     let padding = 15;
     if(player.x < padding) player.x = padding;
     if(player.x > canvas.width - padding) player.x = canvas.width - padding;
@@ -1127,7 +1254,6 @@ function loop(){
         return;
     }
 
-    // Boundary check for ICBM hitting screen edges
     if(icbm.x >= canvas.width || icbm.y >= canvas.height){
         icbm.x = Math.min(icbm.x, canvas.width - 15);
         icbm.y = Math.min(icbm.y, canvas.height - 15);
@@ -1140,6 +1266,7 @@ function loop(){
 
 function handleGameEnd(isHit){
     gameActive = false;
+    playSound('explosion');
     
     if(isHit){
         ctx.fillStyle = "orange";
@@ -1160,6 +1287,7 @@ function handleGameEnd(isHit){
             msg += "<br><br>GBI MISSED TARGET.<br>TIME IS TICKING...";
             
             popup.innerHTML = "<div style='border:2px solid red; padding:20px; background:black;'>" + msg + "</div>";
+            playSound('error');
             
             setTimeout(()=>{
                 popup.style.display="none";
@@ -1172,8 +1300,10 @@ function handleGameEnd(isHit){
         } else if (currentPhase === 2){
             if(isHit){
                 document.body.innerHTML="<h1 style='color:lime;text-align:center;padding-top:200px;font-size:50px;'>MISSION SUCCESS<br>THREAT NEUTRALIZED</h1>";
+                playSound('success');
                 clearInterval(timer);
             } else {
+                playSound('error');
                 alert("MISSED TARGET - RE-ENGAGING TRACKING SYSTEMS");
                 startGameEngine();
             }
